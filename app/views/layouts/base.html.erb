@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- Designined by CodingLab | www.youtube.com/codinglabyt -->
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+    <title><%= html_title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<%= Redmine::Info.app_name %>" />
+    <meta name="keywords" content="issue,bug,tracker" />
+    <%= csrf_meta_tag %>
+    <%= favicon %>
+    <%= stylesheet_link_tag 'jquery/jquery-ui-1.12.1', 'tribute-5.1.3', 'application', 'responsive', :media => 'all' %>
+    <%= stylesheet_link_tag 'rtl', :media => 'all' if l(:direction) == 'rtl' %>
+    <%= javascript_heads %>
+    <%= heads_for_theme %>
+    <%= heads_for_auto_complete(@project) %>
+    <%= call_hook :view_layouts_base_html_head %>
+    <!-- page specific tags -->
+    <%= yield :header_tags -%>
+</head>
+
+<body class="<%= body_css_classes %>">
+
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx bxl-c-plus-plus'></i>
+            <span class="logo_name"><%= page_header_title %></span>
+        </div>
+        
+        
+        <ul  class="nav-links " style="margin-left: 2em">
+        <%= yield :sidebar %>
+        <%= view_layouts_base_sidebar_hook_response %>
+        
+            
+          
+        </ul>
+    </div>
+    <section class="home-section">
+    <div id="top-menu" style="background-color: #0a2458">
+    <div id="account">
+        <%= render_menu :account_menu -%>
+    </div>
+    <%= content_tag('div', "#{l(:label_logged_as)} #{link_to_user(User.current, :format => :username)}".html_safe, :id => 'loggedas') if User.current.logged? %>
+    <%= render_menu :top_menu if User.current.logged? || !Setting.login_required? -%>
+</div>
+
+        <nav>
+        
+            <div class="sidebar-button">
+                <i class='bx bx-menu sidebarBtn'></i>
+                <span class="dashboard">Tableau de bord</span>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Recherche...">
+                <i class='bx bx-search'></i>
+            </div>
+            <div class="profile-details">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png" alt="">
+                <span class="admin_name">User Admin</span>
+                <i class='bx bx-chevron-down'></i>
+            </div>
+        </nav>
+
+        <div class="home-content">
+        <div id="content">
+        <%= render_flash_messages %>
+        <%= yield %>
+        <%= call_hook :view_layouts_base_content %>
+        <div style="clear:both;"></div>
+    </div>
+        </div>
+    </section>
+
+    <script>
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector(".sidebarBtn");
+        sidebarBtn.onclick = function () {
+            sidebar.classList.toggle("active");
+            if (sidebar.classList.contains("active")) {
+                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+            } else
+                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+        }
+    </script>
+
+</body>
+
+</html>
